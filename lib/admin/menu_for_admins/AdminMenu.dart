@@ -22,7 +22,7 @@ class AdminMenu extends StatelessWidget {
               iconSize: 25,
               padding: EdgeInsets.only(right: 25),
               onPressed: () {
-                // TODO go to previous page
+                Navigator.pop(context);
               },
             ),
           ],
@@ -32,7 +32,7 @@ class AdminMenu extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                // TODO go to task info page
+                Navigator.pushNamed(context, '/adminTasks');
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -49,7 +49,7 @@ class AdminMenu extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // TODO go to create task page
+                Navigator.pushNamed(context, '/createTask');
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -67,6 +67,7 @@ class AdminMenu extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 // TODO go to user management page
+                Navigator.pushNamed(context, '/userManagement');
               },
               child: Container(
                 decoration: BoxDecoration(

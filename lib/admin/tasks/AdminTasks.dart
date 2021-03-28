@@ -1,28 +1,34 @@
-import 'package:diplom/list_of_tasks/admins/AdminTaskInfoLoader.dart';
+import 'AdminTaskInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'AdminTaskInfo.dart';
+import 'AdminTaskInfoLoader.dart';
+
 
 class AdminTasks extends StatelessWidget {
 
   final info = new UserTaskInfoLoader().loadInfo();
+
+  goBack(BuildContext context){
+    Navigator.pushNamed(context, '/adminMenu');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.blueAccent,
           title: Text('Admin Tasks'),
-          titleSpacing: 40,
+          titleSpacing: 23,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.close),
               iconSize: 25,
               padding: EdgeInsets.only(right: 25),
               onPressed: () {
-                // TODO go to previous page
+                goBack(context);
               },
             ),
           ],

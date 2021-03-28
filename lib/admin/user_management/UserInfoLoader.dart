@@ -1,4 +1,4 @@
-import 'package:diplom/user_management/UserInfo.dart';
+import 'UserInfo.dart';
 
 class UserInfoLoader {
   List<UserInfo> loadInfo(){
