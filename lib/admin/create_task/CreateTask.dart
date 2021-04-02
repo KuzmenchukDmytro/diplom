@@ -2,6 +2,7 @@ import 'package:diplom/admin/user_management/UserInfo.dart';
 import 'package:diplom/admin/user_management/UserInfoLoader.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class CreateTask extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _CreateTaskState extends State<CreateTask> {
   final commentsTextController = TextEditingController();
   final List<UserInfo> userInfo = UserInfoLoader().loadInfo();
   String dropdownValue = UserInfoLoader().loadInfo()[0].email;
-  List<PickedFile> images = List();
+  List<Asset> images = List();
 
   goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
@@ -44,7 +45,7 @@ class _CreateTaskState extends State<CreateTask> {
           children: <Widget>[
             Container(
               height: 45,
-              padding: EdgeInsets.only(left: 80, right: 20),
+              margin: EdgeInsets.only(left: 80, right: 20),
               child: TextField(
                 showCursor: true,
                 controller: titleTextController,
@@ -58,7 +59,21 @@ class _CreateTaskState extends State<CreateTask> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 80, right: 20, top: 10),
+              height: 45,
+              margin: EdgeInsets.only(left: 80, right: 20, top: 10),
+              child: TextField(
+                controller: commentsTextController,
+                decoration: InputDecoration(
+                    enabledBorder: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(15),
+                      borderSide: new BorderSide(),
+                    ),
+                    // labelText: 'task comments',
+                    hintText: 'Add comments'),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 80, right: 20),
               child: Row(
                 children: [
                   Text(
@@ -93,74 +108,115 @@ class _CreateTaskState extends State<CreateTask> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 80, right: 20, bottom: 10),
+              margin: EdgeInsets.only(left: 80, right: 20),
               child: Row(
                 children: [
-                Text(
-                ' Upload images',
-                style: TextStyle(
-                  fontSize: 17,
-                ),),
+                  Text(
+                    ' Upload images',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
                   IconButton(
                       icon: Icon(Icons.upload_file),
                       iconSize: 30,
                       color: Colors.green[300],
-                      onPressed: () => {imgFromGallery()}),
+                      onPressed: () => {loadAssets()}),
                 ],
               ),
             ),
             Container(
-              height: 45,
-              padding: EdgeInsets.only(left: 80, right: 20),
-              child: TextField(
-                controller: commentsTextController,
-                decoration: InputDecoration(
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(15),
-                      borderSide: new BorderSide(),
-                    ),
-                    // labelText: 'task comments',
-                    hintText: 'Add comments'),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 50),
+              margin: EdgeInsets.only(top: 50),
               child: OutlinedButton(
-                  style: ButtonStyle(
-                    side: MaterialStateProperty.all(BorderSide(width: 2.5, color: Colors.green[400])),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(15),
-                    )),
-                    // shape:
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all(
+                      BorderSide(width: 2.5, color: Colors.green[400])),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(15),
+                  )),
+                  // shape:
+                ),
+                onPressed: () => {
+                  // TODO create task
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(""),
+                        content: Text("Do you want to create another task?"),
+                        actions: [
+                          FlatButton(
+                            child: Text(
+                              "   no   ",
+                              style: TextStyle(fontSize: 18, color: Colors.red),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, '/adminMenu');
+                            },
+                          ),
+                          FlatButton(
+                            child: Text(
+                              "   yes   ",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.green),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, '/createTask');
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                  onPressed: () => {
-                    // TODO create task
-                  },
-                  child: Container(
-                    height: 45,
-                    width: 150,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Create task',
-                      style: TextStyle(
-                        fontSize: 19,
-                        color: Colors.green[400]
+                },
+                child: Container(
+                  height: 45,
+                  width: 150,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Create task',
+                    style: TextStyle(fontSize: 19, color: Colors.green[400]
                         // color: Colors.green[300]
-                      ),
-                    ),
+                        ),
                   ),
+                ),
               ),
             )
           ],
         ));
   }
 
-  imgFromGallery() async {
-    PickedFile image = await ImagePicker()
-        .getImage(source: ImageSource.gallery, imageQuality: 50);
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Example App",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      print(e);
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
 
     setState(() {
-      images.add(image);
+      images = resultList;
     });
   }
 }

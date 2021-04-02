@@ -9,7 +9,7 @@ class AdminTasks extends StatelessWidget {
 
   final info = new UserTaskInfoLoader().loadInfo();
 
-  goBack(BuildContext context){
+  goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
   }
 
@@ -35,67 +35,70 @@ class AdminTasks extends StatelessWidget {
         ),
         body: Scrollbar(
             child: ListView(children: <Widget>[
-            SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-                child: createTable()
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: createTable()
 
-                )])));
+              )
+            ])));
   }
 
-DataTable createTable() {
-  UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
-  var info = infoLoader.loadInfo();
-  return DataTable(
-    columns: const <DataColumn>[
-      DataColumn(
-        label: Text(
-          'date of creation',
+  DataTable createTable() {
+    UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
+    var info = infoLoader.loadInfo();
+    return DataTable(
+      columns: const <DataColumn>[
+        DataColumn(
+          label: Text(
+            'date of creation',
+          ),
         ),
-      ),
-      DataColumn(
-        label: Text(
-          'title',
+        DataColumn(
+          label: Text(
+            'title',
+          ),
         ),
-      ),
-      DataColumn(
-        label: Text(
-          'user',
+        DataColumn(
+          label: Text(
+            'user',
+          ),
         ),
-      ),
-      DataColumn(
-        label: Text(
-          'status',
+        DataColumn(
+          label: Text(
+            'status',
+          ),
         ),
-      ),
-      DataColumn(
-        label: Text(
-          'comments',
+        DataColumn(
+          label: Text(
+            'comments',
+          ),
         ),
-      ),
-    ],
-    rows: <DataRow>[
-      for(int i = 0; i < info.length; i++) DataRow(
-        cells: <DataCell>[
-          DataCell(Text(DateFormat('yyyy-MM-dd').format(info[i].date))),
-          DataCell(Text(info[i].title)),
-          DataCell(UsersDropDownButton(info, i, info[i].taskId)),
-          DataCell(Text(info[i].status.toString())),
-          DataCell(Text(info[i].comments)),
-        ],
-      ),
-    ],
-  );
-}
+      ],
+      rows: <DataRow>[
+        for(int i = 0; i < info.length; i++) DataRow(
+          cells: <DataCell>[
+            DataCell(Text(DateFormat('yyyy-MM-dd').format(info[i].date))),
+            DataCell(Text(info[i].title)),
+            DataCell(UsersDropDownButton(info, i, info[i].taskId)),
+            DataCell(Text(info[i].status.toString())),
+            DataCell(Text(info[i].comments)),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class UsersDropDownButton extends StatefulWidget {
   final List<AdminTaskInfo> userInfo;
   final int userIndex;
   final int taskId;
-  UsersDropDownButton (this.userInfo, this.userIndex, this.taskId);
+
+  UsersDropDownButton(this.userInfo, this.userIndex, this.taskId);
 
   @override
-  _UsersDropDownButtonState createState() => _UsersDropDownButtonState(userInfo[userIndex].email);
+  _UsersDropDownButtonState createState() =>
+      _UsersDropDownButtonState(userInfo[userIndex].email);
 }
 
 class _UsersDropDownButtonState extends State<UsersDropDownButton> {
@@ -116,12 +119,47 @@ class _UsersDropDownButtonState extends State<UsersDropDownButton> {
         color: Colors.deepPurpleAccent,
       ),
       onChanged: (String newValue) {
-        setState(() {
-          if(!(dropdownValue == newValue)){
-            // TODO change assigned user in db
-          }
-          dropdownValue = newValue;
-        });
+          if (dropdownValue != newValue) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(""),
+                  content: Text(
+                      "Do you really want to change assigned user for task ${widget
+                          .userInfo[widget.userIndex].title} "
+                          "from ${widget.userInfo[widget.userIndex]
+                          .email} to $newValue ?"),
+                  actions: [
+                    FlatButton(
+                      child: Text(
+                        "   no   ",
+                        style: TextStyle(fontSize: 18,
+                            color: Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        "   yes   ",
+                        style: TextStyle(fontSize: 18,
+                            color: Colors.green),
+                      ),
+                      onPressed: () {
+                        // TODO change assigned user in db
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+        }
       },
       items: widget.userInfo.map((e) => e.email).toList()
           .map<DropdownMenuItem<String>>((String value) {
