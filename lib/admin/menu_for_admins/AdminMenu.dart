@@ -32,6 +32,7 @@ class AdminMenu extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: () {
+
                 Navigator.pushNamed(context, '/adminTasks');
               },
               child: Container(

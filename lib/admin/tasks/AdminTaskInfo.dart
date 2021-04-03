@@ -19,7 +19,7 @@ class AdminTaskInfo{
     return AdminTaskInfo(
       json['id'],
       date,
-      json['user'],
+      json['user'].toString(),
       json['name'],
       json['comments'],
       status,

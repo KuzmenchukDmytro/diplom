@@ -26,7 +26,7 @@ class UserTaskInfoLoader{
     );
     print(response);
     if(response.statusCode == 200){
-      Iterable tasks = json.decode(response.body)['data'];
+      Iterable tasks = json.decode(response.body);
       return List<AdminTaskInfo>.from(tasks.map((i) => AdminTaskInfo.fromJson(i)));
     }
     else{
