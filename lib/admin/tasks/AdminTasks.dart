@@ -43,9 +43,9 @@ class AdminTasks extends StatelessWidget {
             ])));
   }
 
-  DataTable createTable() {
+  DataTable createTable() async{
     UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
-    var info = infoLoader.loadInfo();
+    await infoLoader.loadInfo().then((info) {
     return DataTable(
       columns: const <DataColumn>[
         DataColumn(
