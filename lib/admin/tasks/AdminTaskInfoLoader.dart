@@ -24,9 +24,9 @@ class UserTaskInfoLoader{
       'http://35.222.44.102:8000/tasks/',
       // headers: {HttpHeaders.authorizationHeader: "bearer 80ad1868-e5a0-42fe-bd8d-b9f7fa03e07f"},
     );
-    print(response);
     if(response.statusCode == 200){
       Iterable tasks = json.decode(response.body);
+      print(tasks);
       return List<AdminTaskInfo>.from(tasks.map((i) => AdminTaskInfo.fromJson(i)));
     }
     else{

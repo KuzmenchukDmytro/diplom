@@ -1,7 +1,7 @@
-import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class Task{
-  List<PickedFile> images;
+  List<Asset> images;
   int userId;
   DateTime createDate;
   String title;

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
+import 'TaskService.dart';
+
 class CreateTask extends StatefulWidget {
   @override
   _CreateTaskState createState() => _CreateTaskState();
@@ -137,7 +139,6 @@ class _CreateTaskState extends State<CreateTask> {
                   // shape:
                 ),
                 onPressed: () => {
-                  // TODO create task
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -187,6 +188,11 @@ class _CreateTaskState extends State<CreateTask> {
             )
           ],
         ));
+  }
+
+  void saveTask() async {
+    TaskService taskService = new TaskService();
+    taskService.createTask(titleTextController.text, commentsTextController.text, dropdownValue, images);
   }
 
   Future<void> loadAssets() async {

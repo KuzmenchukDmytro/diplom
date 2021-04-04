@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 import 'AdminTaskInfoLoader.dart';
 
 class AdminTasks extends StatefulWidget {
+  bool load = false;
 
   @override
   _AdminTasksState createState() => _AdminTasksState();
 }
 
 class _AdminTasksState extends State<AdminTasks> {
-  final info = new UserTaskInfoLoader().loadInfo();
   Widget dataTable = Container();
 
   goBack(BuildContext context) {
@@ -20,7 +20,11 @@ class _AdminTasksState extends State<AdminTasks> {
 
   @override
   Widget build(BuildContext context) {
-    createTable();
+    print("build");
+    if (!widget.load) {
+      createTable();
+      widget.load = true;
+    }
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(

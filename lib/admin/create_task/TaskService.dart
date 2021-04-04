@@ -1,7 +1,7 @@
 import 'Task.dart';
 
 class TaskService {
-  createTask(Task task){
+  createTask(title, comment, email, images){
 
   }
 }
