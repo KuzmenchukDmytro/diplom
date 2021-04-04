@@ -1,8 +1,9 @@
 import 'package:diplom/admin/user_management/UserInfo.dart';
 import 'package:diplom/admin/user_management/UserInfoLoader.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import 'TaskService.dart';
 
@@ -18,12 +19,15 @@ class _CreateTaskState extends State<CreateTask> {
   String dropdownValue = UserInfoLoader().loadInfo()[0].email;
   List<Asset> images = List();
 
+  Widget button = Container();
+
   goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
   }
 
   @override
   Widget build(BuildContext context) {
+    createUsersButton();
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -84,28 +88,7 @@ class _CreateTaskState extends State<CreateTask> {
                       fontSize: 17,
                     ),
                   ),
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style:
-                        const TextStyle(color: Colors.deepPurple, fontSize: 17),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                      });
-                    },
-                    items: userInfo
-                        .map((e) => e.email)
-                        .toList()
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+                  button,
                 ],
               ),
             ),
@@ -193,6 +176,38 @@ class _CreateTaskState extends State<CreateTask> {
   void saveTask() async {
     TaskService taskService = new TaskService();
     taskService.createTask(titleTextController.text, commentsTextController.text, dropdownValue, images);
+  }
+
+  void createUsersButton() async {
+    var usersResponse = await http.get(
+      'http://35.222.44.102:8000/users/',
+    );
+    Iterable usersJson = json.decode(usersResponse.body);
+    var users = List<String>.from(usersJson.map((e) => e['email']).toList());
+    var result = DropdownButton<String>(
+      // value: 'dropdownValue',
+      icon: const Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style:
+      const TextStyle(color: Colors.deepPurple, fontSize: 17),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: users
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+
+    setState(() {
+      button = result;
+    });
   }
 
   Future<void> loadAssets() async {
