@@ -27,11 +27,6 @@ class AdminTaskInfo{
       status,
     );
   }
-
-  /*Map<String, dynamic> toJson() => {
-    'name': name,
-    'id': id,
-  };*/
 }
 
 enum Status{

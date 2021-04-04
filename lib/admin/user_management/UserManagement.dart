@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
 import 'UserInfo.dart';
-import 'UserInfoLoader.dart';
+import 'UserService.dart';
 
-class UserManagement extends StatelessWidget {
+class UserManagement extends StatefulWidget {
+  @override
+  _UserManagementState createState() => _UserManagementState();
+}
+
+class _UserManagementState extends State<UserManagement> {
+  Widget dataTable = Container();
+  bool load = false;
+
   goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!load) {
+      createTable(context);
+      load = true;
+    }
     return WillPopScope(
       onWillPop: () {
         return new Future(() => false);
@@ -34,16 +46,16 @@ class UserManagement extends StatelessWidget {
           body: Scrollbar(
               child: ListView(children: <Widget>[
             SingleChildScrollView(
-                scrollDirection: Axis.horizontal, child: createTable(context))
+                scrollDirection: Axis.horizontal, child: dataTable)
           ]))),
     );
   }
 
-  DataTable createTable(BuildContext context) {
-    UserInfoLoader userInfoLoader = new UserInfoLoader();
-    List<UserInfo> userInfo = userInfoLoader.loadInfo();
+  void createTable(BuildContext context) async{
+    UserSevice userInfoLoader = new UserSevice();
+    List<UserInfo> userInfo = await userInfoLoader.loadInfo();
 
-    return DataTable(
+    DataTable result =  DataTable(
       columns: const <DataColumn>[
         DataColumn(
           label: Text(
@@ -109,8 +121,7 @@ class UserManagement extends StatelessWidget {
                                   color: Colors.green),
                             ),
                             onPressed: () {
-                              print('delete user with id ${userInfo[i].id}');
-                              // TODO delete user with id userInfo[i].id
+                              new UserSevice().deleteUserById(userInfo[i].id);
                               Navigator.of(context).pop();
                               Navigator.pop(context);
                               Navigator.pushNamed(context, "/userManagement");
@@ -127,6 +138,9 @@ class UserManagement extends StatelessWidget {
           ),
       ],
     );
+    setState(() {
+      dataTable = result;
+    });
   }
 }
 

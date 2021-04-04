@@ -1,11 +1,12 @@
+import 'package:diplom/admin/create_task/TaskService.dart';
+import 'package:diplom/admin/user_management/UserService.dart';
+
 import 'AdminTaskInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'AdminTaskInfoLoader.dart';
+import 'AdminService.dart';
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class AdminTasks extends StatefulWidget {
   bool load = false;
@@ -56,11 +57,7 @@ class _AdminTasksState extends State<AdminTasks> {
   void createTable() async {
     UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
 
-    var usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
-    );
-    Iterable usersJson = json.decode(usersResponse.body);
-    var users = Set<String>.from(usersJson.map((e) => e['email']).toList());
+    var users = await new UserSevice().loadUsers();
 
     Widget resDataTable;
     await infoLoader.loadInfo().then((info) {
@@ -169,6 +166,8 @@ class _UsersDropDownButtonState extends State<UsersDropDownButton> {
                     ),
                     onPressed: () {
                       // TODO change assigned user in db
+                      new TaskService().changeAssignedUser(widget.userInfo[widget.userIndex].taskId,
+                          newValue);
                       setState(() {
                         dropdownValue = newValue;
                       });

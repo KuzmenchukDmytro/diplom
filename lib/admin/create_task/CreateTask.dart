@@ -1,9 +1,6 @@
-import 'package:diplom/admin/user_management/UserInfo.dart';
-import 'package:diplom/admin/user_management/UserInfoLoader.dart';
+import 'package:diplom/admin/user_management/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'TaskService.dart';
 
@@ -15,7 +12,6 @@ class CreateTask extends StatefulWidget {
 class _CreateTaskState extends State<CreateTask> {
   final titleTextController = TextEditingController();
   final commentsTextController = TextEditingController();
-  final List<UserInfo> userInfo = UserInfoLoader().loadInfo();
   String dropdownValue;
   List<DropdownMenuItem<String>> items;
   List<Asset> images = List();
@@ -196,13 +192,9 @@ class _CreateTaskState extends State<CreateTask> {
   }
 
   void createUsersButton(BuildContext context) async {
-    var usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
-    );
-    Iterable usersJson = json.decode(usersResponse.body);
-    var users = List<String>.from(usersJson.map((e) => e['email']).toList());
+    var users = await new UserSevice().loadUsers();
     setState(() {
-      dropdownValue = users[0];
+      dropdownValue = users.first;
       items = users
           .map<DropdownMenuItem<String>>((String value){
         return DropdownMenuItem<String>(
