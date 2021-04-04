@@ -21,7 +21,7 @@ class AdminTaskInfo{
       json['id'],
       date,
       json['user'].toString(),
-      userJson.firstWhere((element) => element['username'] == 'admin')['email'],
+      userJson.firstWhere((element) => element['id'] == json['user'])['email'],
       json['name'],
       json['comments'],
       status,

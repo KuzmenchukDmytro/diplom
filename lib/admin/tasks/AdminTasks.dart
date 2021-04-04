@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 
 import 'AdminTaskInfoLoader.dart';
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 class AdminTasks extends StatefulWidget {
   bool load = false;
 
@@ -52,6 +55,13 @@ class _AdminTasksState extends State<AdminTasks> {
 
   void createTable() async {
     UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
+
+    var usersResponse = await http.get(
+      'http://35.222.44.102:8000/users/',
+    );
+    Iterable usersJson = json.decode(usersResponse.body);
+    var users = Set<String>.from(usersJson.map((e) => e['email']).toList());
+
     Widget resDataTable;
     await infoLoader.loadInfo().then((info) {
       resDataTable = DataTable(
@@ -88,7 +98,7 @@ class _AdminTasksState extends State<AdminTasks> {
               cells: <DataCell>[
                 DataCell(Text(DateFormat('yyyy-MM-dd').format(info[i].date))),
                 DataCell(Text(info[i].title)),
-                DataCell(UsersDropDownButton(info, i, info[i].taskId)),
+                DataCell(UsersDropDownButton(info, users, i, info[i].taskId)),
                 DataCell(Text(info[i].status.toString())),
                 DataCell(Text(info[i].comments)),
               ],
@@ -104,10 +114,11 @@ class _AdminTasksState extends State<AdminTasks> {
 
 class UsersDropDownButton extends StatefulWidget {
   final List<AdminTaskInfo> userInfo;
+  final Set<String> users;
   final int userIndex;
   final int taskId;
 
-  UsersDropDownButton(this.userInfo, this.userIndex, this.taskId);
+  UsersDropDownButton(this.userInfo, this.users, this.userIndex, this.taskId);
 
   @override
   _UsersDropDownButtonState createState() =>
@@ -170,9 +181,7 @@ class _UsersDropDownButtonState extends State<UsersDropDownButton> {
           );
         }
       },
-      items: widget.userInfo
-          .map((e) => e.email)
-          .toList()
+      items: widget.users
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,

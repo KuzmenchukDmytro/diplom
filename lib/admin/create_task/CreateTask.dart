@@ -16,10 +16,11 @@ class _CreateTaskState extends State<CreateTask> {
   final titleTextController = TextEditingController();
   final commentsTextController = TextEditingController();
   final List<UserInfo> userInfo = UserInfoLoader().loadInfo();
-  String dropdownValue = UserInfoLoader().loadInfo()[0].email;
+  String dropdownValue;
+  List<DropdownMenuItem<String>> items;
   List<Asset> images = List();
 
-  Widget button = Container();
+  bool isSet = false;
 
   goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
@@ -27,7 +28,10 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   Widget build(BuildContext context) {
-    createUsersButton();
+    if(!isSet){
+      createUsersButton(context);
+      isSet = true;
+    }
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
@@ -88,7 +92,20 @@ class _CreateTaskState extends State<CreateTask> {
                       fontSize: 17,
                     ),
                   ),
-                  button,
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style:
+                    const TextStyle(color: Colors.deepPurple, fontSize: 17),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownValue = newValue;
+                      });
+                    },
+                    items: items,
+                  ),
                 ],
               ),
             ),
@@ -178,35 +195,21 @@ class _CreateTaskState extends State<CreateTask> {
     taskService.createTask(titleTextController.text, commentsTextController.text, dropdownValue, images);
   }
 
-  void createUsersButton() async {
+  void createUsersButton(BuildContext context) async {
     var usersResponse = await http.get(
       'http://35.222.44.102:8000/users/',
     );
     Iterable usersJson = json.decode(usersResponse.body);
     var users = List<String>.from(usersJson.map((e) => e['email']).toList());
-    var result = DropdownButton<String>(
-      // value: 'dropdownValue',
-      icon: const Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style:
-      const TextStyle(color: Colors.deepPurple, fontSize: 17),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: users
-          .map<DropdownMenuItem<String>>((String value) {
+    setState(() {
+      dropdownValue = users[0];
+      items = users
+          .map<DropdownMenuItem<String>>((String value){
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
-      }).toList(),
-    );
-
-    setState(() {
-      button = result;
+      }).toList();
     });
   }
 
