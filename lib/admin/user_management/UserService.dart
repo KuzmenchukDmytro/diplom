@@ -5,7 +5,7 @@ import 'dart:convert';
 class UserSevice {
   Future<List<UserInfo>> loadInfo() async{
     var usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/users/'),
     );
     Iterable usersJson = json.decode(usersResponse.body);
     return List<UserInfo>.from(usersJson.map((i) => UserInfo.fromJson(i)));
@@ -13,7 +13,7 @@ class UserSevice {
 
   Future<Set<String>> loadUsers() async{
     var usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/users/'),
     );
     Iterable usersJson = json.decode(usersResponse.body);
     return Set<String>.from(usersJson.map((e) => e['email']).toList());
@@ -21,7 +21,7 @@ class UserSevice {
 
   Future<int> getUserId(String email) async {
     var usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/users/'),
     );
     Iterable usersJson = json.decode(usersResponse.body);
     return usersJson.firstWhere((element) => element['email'] == email)['id'];
@@ -29,24 +29,24 @@ class UserSevice {
 
   void deleteUserById(int id){
     http.delete(
-      'http://35.222.44.102:8000/users/$id/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/users/$id/'),
     );
   }
 
   void demotePrivilegesByUserId(int id){
-    final String uri = 'http://35.222.44.102:8000/users/$id/';
+    final String uri = 'https://dataset.yourcofounder.com.ua/users/$id/';
     final body = {
       'is_staff': false.toString()
     };
-    http.patch(uri, body: body);
+    http.patch(Uri.parse(uri), body: body);
   }
 
   void elevatePrivilegesByUserId(int id){
-    final String uri = 'http://35.222.44.102:8000/users/$id/';
+    final String uri = 'https://dataset.yourcofounder.com.ua/users/$id/';
     final body = {
       'is_staff': true.toString()
     };
-    http.patch(uri, body: body);
+    http.patch(Uri.parse(uri), body: body);
   }
 
 

@@ -10,10 +10,10 @@ class UserTaskInfoLoader{
 
   Future<List<AdminTaskInfo>> loadInfo() async {
     final response = await http.get(
-      'http://35.222.44.102:8000/tasks/',
+      Uri.parse('https://dataset.yourcofounder.com.ua/tasks/'),
     );
     final usersResponse = await http.get(
-      'http://35.222.44.102:8000/users/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/users/'),
     );
     if(response.statusCode == 200){
       Iterable tasks = json.decode(response.body);

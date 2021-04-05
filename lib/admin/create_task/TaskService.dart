@@ -14,7 +14,7 @@ class TaskService {
   void createTask(title, comment, email,  List<Asset> images) async {
     int currentUser = await new UserSevice().getUserId(email);
     final response = await http.post(
-      'http://35.222.44.102:8000/tasks/',
+      Uri.parse('https://dataset.yourcofounder.com.ua/tasks/'),
       body: {"name": title, "comments": comment, "user": currentUser},
       headers: {"Content-Type": "application/json"},
     );
@@ -35,7 +35,7 @@ class TaskService {
       this.sendFiletodjango(element, taskId);
     });
     /*http.post(
-      'http://35.222.44.102:8000/images/',
+      'https://dataset.yourcofounder.com.ua/images/',
       body: {"task": taskId, "file": images},
     );*/
   }
@@ -50,7 +50,7 @@ class TaskService {
     return file;
   }*/
 
-/*  Future<List<File>> getFileFromAssets(List<Asset> assetArray) async {
+  Future<List<File>> getFileFromAssets(List<Asset> assetArray) async {
     List<File> fileImageArray = [];
     await assetArray.forEach((imageAsset) async {
       final filePath =
@@ -62,10 +62,10 @@ class TaskService {
       }
     });
     return fileImageArray;
-  }*/
+  }
 
   Future<Map<String, dynamic>> sendFiletodjango(File file, int taskId) async {
-    var endPoint = 'http://35.222.44.102:8000/images/';
+    var endPoint = 'https://dataset.yourcofounder.com.ua/images/';
     Map data = {};
     String base64file = base64Encode(file.readAsBytesSync());
     String fileName = file.path.split("/").last;
@@ -73,7 +73,7 @@ class TaskService {
     data['task'] = taskId;
     data['file'] = base64file;
     try {
-      var response = await http.post(endPoint, body: convert.json.encode(data));
+      var response = await http.post(Uri.parse(endPoint), body: convert.json.encode(data));
     } catch (e) {
       throw (e.toString());
     }
@@ -81,14 +81,14 @@ class TaskService {
 
   void changeAssignedUser(int taskId, String email) async {
     int userId = await new UserSevice().getUserId(email);
-    final String uri = 'http://35.222.44.102:8000/tasks/$taskId/';
+    final String uri = 'https://dataset.yourcofounder.com.ua/tasks/$taskId/';
     final body = {'user': userId.toString()};
-    http.patch(uri, body: body);
+    http.patch(Uri.parse(uri), body: body);
   }
 
   void deleteTaskById(int id) {
     http.delete(
-      'http://35.222.44.102:8000/tasks/$id/',
+        Uri.parse('https://dataset.yourcofounder.com.ua/tasks/$id/'),
     );
   }
 }
