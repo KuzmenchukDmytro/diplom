@@ -32,4 +32,22 @@ class UserSevice {
       'http://35.222.44.102:8000/users/$id/',
     );
   }
+
+  void demotePrivilegesByUserId(int id){
+    final String uri = 'http://35.222.44.102:8000/users/$id/';
+    final body = {
+      'is_staff': false.toString()
+    };
+    http.patch(uri, body: body);
+  }
+
+  void elevatePrivilegesByUserId(int id){
+    final String uri = 'http://35.222.44.102:8000/users/$id/';
+    final body = {
+      'is_staff': true.toString()
+    };
+    http.patch(uri, body: body);
+  }
+
+
 }

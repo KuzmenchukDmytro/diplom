@@ -88,6 +88,11 @@ class _AdminTasksState extends State<AdminTasks> {
               'comments',
             ),
           ),
+          DataColumn(
+            label: Text(
+              'action',
+            ),
+          ),
         ],
         rows: <DataRow>[
           for (int i = 0; i < info.length; i++)
@@ -98,6 +103,48 @@ class _AdminTasksState extends State<AdminTasks> {
                 DataCell(UsersDropDownButton(info, users, i, info[i].taskId)),
                 DataCell(Text(info[i].status.toString())),
                 DataCell(Text(info[i].comments)),
+                DataCell(IconButton(
+                  icon: Icon(Icons.close),
+                  iconSize: 25,
+                  color: Colors.red,
+                  onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(""),
+                          content: Text(
+                              "Do you really want to delete task: ${info[i].title} ?"),
+                          actions: [
+                            FlatButton(
+                              child: Text(
+                                "cancel",
+                                style: TextStyle(fontSize: 18,
+                                    color: Colors.red),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                "confirm",
+                                style: TextStyle(fontSize: 18,
+                                    color: Colors.green),
+                              ),
+                              onPressed: () {
+                                new TaskService().deleteTaskById(info[i].taskId);
+                                Navigator.of(context).pop();
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, "/adminTasks");
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  },
+                )),
               ],
             ),
         ],

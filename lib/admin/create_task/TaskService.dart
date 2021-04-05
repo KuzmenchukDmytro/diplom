@@ -14,6 +14,12 @@ class TaskService {
     final body = {
       'user': userId.toString()
     };
-    var taskResponse = await http.patch(uri, body: body);
+    http.patch(uri, body: body);
+  }
+
+  void deleteTaskById(int id){
+    http.delete(
+      'http://35.222.44.102:8000/tasks/$id/',
+    );
   }
 }

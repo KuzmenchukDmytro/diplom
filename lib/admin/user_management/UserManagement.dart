@@ -173,8 +173,7 @@ class _RolesDropDownButtonState extends State<RolesDropDownButton> {
         color: Colors.deepPurpleAccent,
       ),
       onChanged: (String newValue) {
-        setState(() {
-          if (!(dropdownValue == newValue)) {
+          if (dropdownValue != newValue) {
             if (newValue == UserRole.user.toString()) {
               showDialog(
                 context: context,
@@ -201,8 +200,10 @@ class _RolesDropDownButtonState extends State<RolesDropDownButton> {
                               color: Colors.green),
                         ),
                         onPressed: () {
-                          // TODO change role user with id widget.userId to USER
-                          dropdownValue = newValue;
+                          new UserSevice().demotePrivilegesByUserId(widget.userId);
+                          setState(() {
+                            dropdownValue = newValue;
+                          });
                           Navigator.of(context).pop();
                         },
                       ),
@@ -237,8 +238,10 @@ class _RolesDropDownButtonState extends State<RolesDropDownButton> {
                               color: Colors.green),
                         ),
                         onPressed: () {
-                          // TODO change role user with id widget.userId to ADMIN
-                          dropdownValue = newValue;
+                          new UserSevice().elevatePrivilegesByUserId(widget.userId);
+                          setState(() {
+                            dropdownValue = newValue;
+                          });
                           Navigator.of(context).pop();
                         },
                       ),
@@ -248,7 +251,6 @@ class _RolesDropDownButtonState extends State<RolesDropDownButton> {
               );
             }
           }
-        });
       },
       items: UserRole.values
           .map((e) => e.toString())
