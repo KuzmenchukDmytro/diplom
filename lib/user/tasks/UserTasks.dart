@@ -1,44 +1,50 @@
+import 'package:diplom/user/perform_task/PerformTask.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'UserTaskInfoLoader.dart';
+import 'UserTaskService.dart';
 
-class UserTasks extends StatelessWidget {
+class UserTasks extends StatefulWidget {
+  @override
+  _UserTasksState createState() => _UserTasksState();
+}
 
-  final info = new UserTaskInfoLoader().loadInfo();
+class _UserTasksState extends State<UserTasks> {
+  Widget dataTable = Container();
+  bool load = false;
 
   @override
   Widget build(BuildContext context) {
+    if (!load) {
+      createTable();
+      load = true;
+    }
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
           title: Text('My Tasks'),
-          titleSpacing: 40,
+          titleSpacing: 23,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.close),
               iconSize: 25,
               padding: EdgeInsets.only(right: 25),
-              onPressed: () {
-                // TODO go to previous page
-              },
+              onPressed: () {},
             ),
           ],
         ),
         body: Scrollbar(
             child: ListView(children: <Widget>[
-              SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: createTable()
-
-              )])));
+          SingleChildScrollView(
+              scrollDirection: Axis.horizontal, child: dataTable)
+        ])));
   }
 
-  DataTable createTable() {
-    UserTaskInfoLoader infoLoader = new UserTaskInfoLoader();
-    var info = infoLoader.loadInfo();
-    return DataTable(
+  void createTable() async {
+    UserTaskService infoLoader = new UserTaskService();
+    var info = await infoLoader.loadInfo();
+    DataTable result = DataTable(
       columns: const <DataColumn>[
         DataColumn(
           label: Text(
@@ -57,23 +63,21 @@ class UserTasks extends StatelessWidget {
         ),
       ],
       rows: <DataRow>[
-        for(int i = 0; i < info.length; i++) DataRow(
-          cells: <DataCell>[
-            DataCell(Text(DateFormat('yyyy-MM-dd').format(info[i].date)),
-                onTap: () => {
-                  // Todo go to perform task info
-                }),
-            DataCell(Text(info[i].title),
-                onTap: () => {
-                  // Todo go to perform task info
-                }),
-            DataCell(Text(info[i].comments),
-                onTap: () => {
-                  // Todo go to perform task info
-                }),
-          ],
-        ),
+        for (int i = 0; i < info.length; i++)
+          DataRow(
+            cells: <DataCell>[
+              DataCell(Text(DateFormat('yyyy-MM-dd').format(info[i].date)),
+                  onTap: () => {Navigator.pushNamed(context, '/performTasks', arguments: PerformTaskArguments(info[i].taskId))}),
+              DataCell(Text(info[i].title),
+                  onTap: () => {Navigator.pushNamed(context, '/performTasks', arguments: PerformTaskArguments(info[i].taskId))}),
+              DataCell(Text(info[i].comments),
+                  onTap: () => {Navigator.pushNamed(context, '/performTasks', arguments: PerformTaskArguments(info[i].taskId))}),
+            ],
+          ),
       ],
     );
+    setState(() {
+      dataTable = result;
+    });
   }
 }

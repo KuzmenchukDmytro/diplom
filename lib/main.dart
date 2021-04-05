@@ -1,3 +1,4 @@
+import 'package:diplom/user/perform_task/PerformTask.dart';
 import 'package:diplom/user/tasks/UserTasks.dart';
 
 import 'admin/create_task/CreateTask.dart';
@@ -14,13 +15,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/adminMenu',
+      initialRoute: '/userTasks',
       routes: {
         '/adminMenu': (context) => AdminMenu(),
         '/adminTasks': (context) => AdminTasks(),
         '/userManagement': (context) => UserManagement(),
         '/createTask': (context) => CreateTask(),
         '/userTasks': (context) => UserTasks(),
+        '/performTasks': (context) => PerformTask(),
       },
     );
   }
