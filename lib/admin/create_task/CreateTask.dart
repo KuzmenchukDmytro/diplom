@@ -135,6 +135,7 @@ class _CreateTaskState extends State<CreateTask> {
                   // shape:
                 ),
                 onPressed: () => {
+                  this.saveTask(),
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -188,7 +189,7 @@ class _CreateTaskState extends State<CreateTask> {
 
   void saveTask() async {
     TaskService taskService = new TaskService();
-    // taskService.createTask(titleTextController.text, commentsTextController.text, dropdownValue, images);
+    taskService.createTask(titleTextController.text, commentsTextController.text, dropdownValue, images);
   }
 
   void createUsersButton(BuildContext context) async {
