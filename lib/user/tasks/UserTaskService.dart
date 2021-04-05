@@ -1,4 +1,5 @@
-import 'file:///D:/study/8%20semester/diplom/lib/user/perform_task/ImageInfo.dart';
+
+import 'package:diplom/user/perform_task/ImageInfo.dart';
 
 import 'UserTaskInfo.dart';
 import 'dart:async';

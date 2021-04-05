@@ -1,7 +1,8 @@
 import 'package:diplom/user/tasks/UserTaskService.dart';
 import 'package:flutter/material.dart';
 
-import 'file:///D:/study/8%20semester/diplom/lib/user/perform_task/ImageInfo.dart';
+import 'ImageInfo.dart';
+
 
 class PerformTaskArguments {
   int taskId;
