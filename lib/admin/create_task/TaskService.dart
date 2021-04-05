@@ -2,9 +2,19 @@ import 'package:diplom/admin/user_management/UserService.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'Task.dart';
+import 'package:http/http.dart' as http;
 
 class TaskService {
-  createTask(title, comment, email, images){
+  void createTask(title, comment, email, images, users) async {
+    int currentUser =
+    users.firstWhere((element) => element['email'] == email)['id'];
+    final response = await http.patch(
+      'http://35.222.44.102:8000/tasks/',
+      body: {"name": title, "comments": comment, "user": currentUser},
+      headers: {"Content-Type": "application/json"},
+    );
+    // json.encode(newTeacher.yourMap)
 
   }
 

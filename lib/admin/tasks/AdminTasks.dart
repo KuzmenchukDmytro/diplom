@@ -9,14 +9,13 @@ import 'AdminService.dart';
 
 
 class AdminTasks extends StatefulWidget {
-  bool load = false;
-
   @override
   _AdminTasksState createState() => _AdminTasksState();
 }
 
 class _AdminTasksState extends State<AdminTasks> {
   Widget dataTable = Container();
+  bool load = false;
 
   goBack(BuildContext context) {
     Navigator.pushNamed(context, '/adminMenu');
@@ -25,9 +24,9 @@ class _AdminTasksState extends State<AdminTasks> {
   @override
   Widget build(BuildContext context) {
     print("build");
-    if (!widget.load) {
+    if (!load) {
       createTable();
-      widget.load = true;
+      load = true;
     }
     return Scaffold(
         backgroundColor: Colors.grey[200],
