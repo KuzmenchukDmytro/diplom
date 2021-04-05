@@ -10,6 +10,10 @@ class UserTasks extends StatefulWidget {
 }
 
 class _UserTasksState extends State<UserTasks> {
+  goBack(BuildContext context) {
+    Navigator.pushNamed(context, '/commonMenu');
+  }
+
   Widget dataTable = Container();
   bool load = false;
 
@@ -22,6 +26,7 @@ class _UserTasksState extends State<UserTasks> {
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.blueAccent,
           title: Text('My Tasks'),
           titleSpacing: 23,
@@ -30,7 +35,9 @@ class _UserTasksState extends State<UserTasks> {
               icon: Icon(Icons.close),
               iconSize: 25,
               padding: EdgeInsets.only(right: 25),
-              onPressed: () {},
+              onPressed: () {
+                goBack(context);
+              },
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:diplom/user/perform_task/PerformTask.dart';
 import 'package:diplom/user/tasks/UserTasks.dart';
 
+import 'CommonMenu/CommonMenu.dart';
 import 'admin/create_task/CreateTask.dart';
 import 'admin/menu_for_admins/AdminMenu.dart';
 import 'admin/tasks/AdminTasks.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/userTasks',
+      initialRoute: '/commonMenu',
       routes: {
         '/adminMenu': (context) => AdminMenu(),
         '/adminTasks': (context) => AdminTasks(),
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         '/createTask': (context) => CreateTask(),
         '/userTasks': (context) => UserTasks(),
         '/performTasks': (context) => PerformTask(),
+        '/commonMenu': (context) => CommonMenu(),
       },
     );
   }

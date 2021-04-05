@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AdminMenu extends StatelessWidget {
+class CommonMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
-          title: Text('Admin Menu'),
+          title: Text('Common Menu'),
           leading: IconButton(
             icon: Icon(Icons.logout),
             iconSize: 25,
@@ -22,7 +22,7 @@ class AdminMenu extends StatelessWidget {
               iconSize: 25,
               padding: EdgeInsets.only(right: 25),
               onPressed: () {
-                Navigator.pushNamed(context, '/commonMenu');
+                Navigator.pop(context);
               },
             ),
           ],
@@ -32,8 +32,7 @@ class AdminMenu extends StatelessWidget {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-
-                Navigator.pushNamed(context, '/adminTasks');
+                Navigator.pushNamed(context, '/adminMenu');
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -43,32 +42,14 @@ class AdminMenu extends StatelessWidget {
                 height: 50,
                 child: const Center(
                     child: Text(
-                  'Tasks Info',
+                  'Admin Menu',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 )),
               ),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/createTask');
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  top: BorderSide(width: 1, color: Colors.grey[400]),
-                )),
-                height: 50,
-                child: const Center(
-                    child: Text(
-                  'Create Task',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                )),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // TODO go to user management page
-                Navigator.pushNamed(context, '/userManagement');
+                Navigator.pushNamed(context, '/userTasks');
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -78,7 +59,7 @@ class AdminMenu extends StatelessWidget {
                 height: 50,
                 child: const Center(
                     child: Text(
-                  'User Management',
+                  'User Tasks',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 )),
               ),
